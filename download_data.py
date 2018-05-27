@@ -140,6 +140,9 @@ def main():
     links = get_download_links()
     links = stop_duplicated_downloads(links)
     if links:
+        if not os.path.exists('./compressed_data'):
+            os.makedirs('./compressed_data')
+            
         with ThreadPoolExecutor(max_workers=25) as executor:
             future_to_url = {executor.submit(download_file, link): link for link in links}
             for future in as_completed((future_to_url)):
