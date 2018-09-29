@@ -1,8 +1,9 @@
 EPA air quality data analysis.
 
-Allows to get data from EPA website.
+https://aqs.epa.gov/aqsweb/airdata/FileFormats.html
+
+https://aqs.epa.gov/aqsweb/airdata/download_files.html#Raw
+
 
 ## TODO:
-* Unzip data
-* Merge data and save as .hdf
-* exploratory data analysis in jpnb
+* exploratory data analysis in .ipnyb
