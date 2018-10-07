@@ -43,3 +43,6 @@ None
 07/10/2018 17:48:28 Created SiteCode Column.
 07/10/2018 17:48:28 Created LocalDate columns.
 07/10/2018 17:48:28 Starting to average_instruments.
+07/10/2018 17:50:15 Ensuring coverage.
+07/10/2018 17:50:16 Saving file...
+07/10/2018 17:50:18 Saved file under: /home/filip/projects/deep_aqi/deep_aqi/data/interim/hourly_TEMP_2017.parquet
