@@ -1,0 +1,45 @@
+07/10/2018 17:39:26 Reading files...
+07/10/2018 17:39:26 ['/home/filip/projects/deep_aqi/deep_aqi/data/raw/hourly_WIND_2017.csv', '/home/filip/projects/deep_aqi/deep_aqi/data/raw/hourly_PRESS_2017.csv', '/home/filip/projects/deep_aqi/deep_aqi/data/raw/hourly_88101_2017.csv', '/home/filip/projects/deep_aqi/deep_aqi/data/raw/hourly_TEMP_2017.csv']
+07/10/2018 17:39:26 Loading hourly_WIND_2017.csv
+07/10/2018 17:39:26 File loaded successfully
+None
+07/10/2018 17:39:26 Created SiteCode Column.
+07/10/2018 17:39:26 Created LocalDate columns.
+07/10/2018 17:39:26 Starting to average_instruments.
+07/10/2018 17:41:15 Ensuring coverage.
+07/10/2018 17:41:16 Saving file...
+07/10/2018 17:42:55 Reading files...
+07/10/2018 17:42:55 ['/home/filip/projects/deep_aqi/deep_aqi/data/raw/hourly_WIND_2017.csv', '/home/filip/projects/deep_aqi/deep_aqi/data/raw/hourly_PRESS_2017.csv', '/home/filip/projects/deep_aqi/deep_aqi/data/raw/hourly_88101_2017.csv', '/home/filip/projects/deep_aqi/deep_aqi/data/raw/hourly_TEMP_2017.csv']
+07/10/2018 17:42:55 Loading hourly_WIND_2017.csv
+07/10/2018 17:42:56 File loaded successfully
+None
+07/10/2018 17:42:56 Created SiteCode Column.
+07/10/2018 17:42:56 Created LocalDate columns.
+07/10/2018 17:42:56 Starting to average_instruments.
+07/10/2018 17:44:45 Ensuring coverage.
+07/10/2018 17:44:46 Saving file...
+07/10/2018 17:44:48 Saved file under: /home/filip/projects/deep_aqi/deep_aqi/data/interim/hourly_WIND_2017.parquet
+07/10/2018 17:44:48 Loading hourly_PRESS_2017.csv
+07/10/2018 17:44:48 File loaded successfully
+None
+07/10/2018 17:44:48 Created SiteCode Column.
+07/10/2018 17:44:48 Created LocalDate columns.
+07/10/2018 17:44:48 Starting to average_instruments.
+07/10/2018 17:46:35 Ensuring coverage.
+07/10/2018 17:46:36 Saving file...
+07/10/2018 17:46:38 Saved file under: /home/filip/projects/deep_aqi/deep_aqi/data/interim/hourly_PRESS_2017.parquet
+07/10/2018 17:46:38 Loading hourly_88101_2017.csv
+07/10/2018 17:46:39 File loaded successfully
+None
+07/10/2018 17:46:39 Created SiteCode Column.
+07/10/2018 17:46:39 Created LocalDate columns.
+07/10/2018 17:46:39 Starting to average_instruments.
+07/10/2018 17:48:25 Ensuring coverage.
+07/10/2018 17:48:26 Saving file...
+07/10/2018 17:48:28 Saved file under: /home/filip/projects/deep_aqi/deep_aqi/data/interim/hourly_88101_2017.parquet
+07/10/2018 17:48:28 Loading hourly_TEMP_2017.csv
+07/10/2018 17:48:28 File loaded successfully
+None
+07/10/2018 17:48:28 Created SiteCode Column.
+07/10/2018 17:48:28 Created LocalDate columns.
+07/10/2018 17:48:28 Starting to average_instruments.
