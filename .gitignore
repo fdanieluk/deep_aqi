@@ -1,3 +1,4 @@
 deep_aqi/data/
 deep_aqi.egg-info
 deep_aqi/src/logs/
+deep_aqi/__pycache__
