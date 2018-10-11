@@ -107,7 +107,9 @@ def main():
 
         # something is messed up with Qualifier column
         data = dd.read_csv(file, dtype={'Qualifier': 'object',
-                                        'MDL': 'float64'},
+                                        'MDL': 'float64',
+                                        'Date of Last Change': 'object'
+                                        },
                            assume_missing=True)
         logging.info(f'File loaded successfully\n{data.info()}')
 

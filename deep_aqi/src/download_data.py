@@ -8,7 +8,7 @@ from deep_aqi import ROOT
 from deep_aqi.src.helper_functions import no_overlaping_files
 
 DOWNLOAD_PATH = os.path.join(ROOT, 'data', 'compressed')
-START_YEAR = 2016
+START_YEAR = 2010
 END_YEAR = 2017
 
 

@@ -4,6 +4,6 @@ from deep_aqi.src.preproc import main as preproc
 
 
 if __name__ == '__main__':
-    download()
+    download() # go to dowload_data to specify years
     unpack()
     preproc()
