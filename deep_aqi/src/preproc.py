@@ -16,6 +16,7 @@ import dask
 import logging
 
 from deep_aqi import ROOT
+from deep_aqi.src.helper_functions import no_overlaping_files
 
 
 pd.set_option('max_columns', 50)
@@ -80,6 +81,8 @@ def save_file(df, source_path):
     logging.info(f'Saved file under: {save_path}')
 
 
+
+
 # globals
 RAW_DATA = os.path.join(ROOT, 'data', 'raw')
 INTERIM_DATA = os.path.join(ROOT, 'data', 'interim')
@@ -93,10 +96,10 @@ logging.basicConfig(filename=LOG_PATH,
                     format='%(asctime)s %(message)s',
                     datefmt='%d/%m/%Y %H:%M:%S')
 
-
-if __name__ == '__main__':
+def main():
     logging.info('Reading files...')
     files = glob(f'{RAW_DATA}/*.csv', recursive=True)
+    files = no_overlaping_files(files, dir_target=INTERIM_DATA)
     logging.info(files)
 
     for file in files:
@@ -104,7 +107,8 @@ if __name__ == '__main__':
 
         # something is messed up with Qualifier column
         data = dd.read_csv(file, dtype={'Qualifier': 'object',
-                                        'MDL': 'float64'})
+                                        'MDL': 'float64'},
+                           assume_missing=True)
         logging.info(f'File loaded successfully\n{data.info()}')
 
         data = create_sitecode(data)
@@ -113,3 +117,7 @@ if __name__ == '__main__':
         data = ensure_coverage(data)
 
         save_file(data, file)
+
+
+if __name__ == '__main__':
+    main()

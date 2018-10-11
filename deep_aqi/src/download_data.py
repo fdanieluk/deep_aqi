@@ -5,9 +5,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
 
 from deep_aqi import ROOT
+from deep_aqi.src.helper_functions import no_overlaping_files
 
 DOWNLOAD_PATH = os.path.join(ROOT, 'data', 'compressed')
-START_YEAR = 2017
+START_YEAR = 2016
 END_YEAR = 2017
 
 
@@ -111,7 +112,6 @@ class file_info():
     def __str__(self):
         return f'{self.year} {self.measurement} {self.filename} '
 
-
 def get_download_links():
     download_links = []
     fnames = get_hourly_filenames()
@@ -123,7 +123,6 @@ def get_download_links():
 
     return download_links
 
-
 def download_file(link):
     if not os.path.exists(DOWNLOAD_PATH):
         os.makedirs(DOWNLOAD_PATH)
@@ -133,19 +132,9 @@ def download_file(link):
     urlretrieve(link, file_path)
     print(f'File saved under: {file_path}')
 
-
-def stop_duplicated_downloads(download_links):
-    if not os.path.exists(DOWNLOAD_PATH):
-        os.makedirs(DOWNLOAD_PATH)
-    current_files = os.listdir(DOWNLOAD_PATH)
-    download_links = [link for link in download_links
-                      if link.split('/')[-1] not in current_files]
-    return download_links
-
-
 def main():
     links = get_download_links()
-    links = stop_duplicated_downloads(links)
+    links = no_overlaping_files(links, DOWNLOAD_PATH)
     if links:
         with ThreadPoolExecutor(max_workers=25) as executor:
             future_to_url = {executor.submit(download_file, link): link for link in links}
