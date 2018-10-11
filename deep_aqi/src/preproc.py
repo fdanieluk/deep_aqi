@@ -103,7 +103,8 @@ if __name__ == '__main__':
         logging.info(f'Loading {os.path.basename(file)}')
 
         # something is messed up with Qualifier column
-        data = dd.read_csv(files[0], dtype={'Qualifier': 'object'})
+        data = dd.read_csv(file, dtype={'Qualifier': 'object',
+                                        'MDL': 'float64'})
         logging.info(f'File loaded successfully\n{data.info()}')
 
         data = create_sitecode(data)

@@ -4,8 +4,10 @@ from urllib.request import urlretrieve
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
 
+from deep_aqi import ROOT
 
-START_YEAR = 2010
+DOWNLOAD_PATH = os.path.join(ROOT, 'data', 'compressed')
+START_YEAR = 2017
 END_YEAR = 2017
 
 
@@ -17,8 +19,9 @@ MEASUREMENTS = 'TPL' - HAPs, VOCs, NONOxNOy, Lead
 MEASUREMENTS = ['Ozone', 'WIND] - any number of measurements
 MEASUREMENTS = ['CRITERIA_GASES', 'TPL'] - any number of groups
 """
-ALLOW_MEASUREMENTS = ['ALL']
 
+
+ALLOW_MEASUREMENTS = ['CRITERIA_GASES', 'PARTICULATES', 'WEATHER']
 
 
 def get_hourly_filenames():
@@ -55,15 +58,15 @@ def measurement_fltr(condition):
                 'TPL': all_measurements[12:16]
                 }
 
-    meas_list = []
+    measurements_ = []
     for el in condition:
         if el in tag_dict:
-            meas_list.extend(tag_dict[el])
+            measurements_.extend(tag_dict[el])
         else:
-            meas_list.append(el)
+            measurements_.append(el)
 
 
-    return meas_list
+    return measurements_
 
 
 class file_info():
@@ -122,15 +125,19 @@ def get_download_links():
 
 
 def download_file(link):
+    if not os.path.exists(DOWNLOAD_PATH):
+        os.makedirs(DOWNLOAD_PATH)
     filename = link.split('/')[-1]
     print(f'Beginning download of {filename}')
-    filename = './compressed_data/' + filename
-    urlretrieve(link, filename)
-    print(f'File saved under: {filename}')
+    file_path = os.path.join(DOWNLOAD_PATH, filename)
+    urlretrieve(link, file_path)
+    print(f'File saved under: {file_path}')
 
 
 def stop_duplicated_downloads(download_links):
-    current_files = os.listdir('./compressed_data')
+    if not os.path.exists(DOWNLOAD_PATH):
+        os.makedirs(DOWNLOAD_PATH)
+    current_files = os.listdir(DOWNLOAD_PATH)
     download_links = [link for link in download_links
                       if link.split('/')[-1] not in current_files]
     return download_links
@@ -140,9 +147,6 @@ def main():
     links = get_download_links()
     links = stop_duplicated_downloads(links)
     if links:
-        if not os.path.exists('./compressed_data'):
-            os.makedirs('./compressed_data')
-
         with ThreadPoolExecutor(max_workers=25) as executor:
             future_to_url = {executor.submit(download_file, link): link for link in links}
             for future in as_completed((future_to_url)):

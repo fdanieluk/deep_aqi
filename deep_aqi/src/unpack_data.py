@@ -1,25 +1,19 @@
 from zipfile import ZipFile
 from glob import glob
-import pandas as pd
+from os.path import join
+
+from deep_aqi import ROOT
 
 
-pd.set_option('max_columns', 50)
-pd.set_option('expand_frame_repr', False)
+COMPRESSED_DATA = join(ROOT, 'data', 'compressed')
+RAW_DATA = join(ROOT, 'data', 'raw')
 
-
-def unzip(zip_file):
-    fname = ZipFile(zip_file).namelist()
-    df = pd.read_csv(ZipFile(zip_file).open(fname))
-    return df
 
 def main():
-    zip_dir = r'./compressed_data'
-    zip_files = glob(f'{zip_dir}/*', recursive=True)
+    files_to_unpack = glob(f'{COMPRESSED_DATA}/*.zip', recursive=True)
+    for file in files_to_unpack:
+        ZipFile(file, 'r').extractall(RAW_DATA)
 
 
-    # TODO: create HDF Store
-    for zip_file in zip_files:
-        unzip(zip_file)
-
-        # TODO: write to hdf store under same name as .csv name
-        
+if __name__ == '__main__':
+    main()
