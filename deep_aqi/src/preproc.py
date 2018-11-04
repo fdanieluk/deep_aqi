@@ -17,6 +17,7 @@ import logging
 import atexit
 import pickle
 import re
+import numpy as np
 
 from deep_aqi import ROOT
 from deep_aqi.src.helper_functions import no_overlaping_files
@@ -132,6 +133,32 @@ def merge_weather():
     weather = weather.drop('Dew Point', axis=1)
     weather = weather.dropna()
 
+    # rename columns
+    weather = weather.rename(columns={'Wind Direction - Resultant': 'WindDir',
+                                      'Wind Speed - Resultant': 'WindSpeed',
+                                      'Outdoor Temperature': 'Temperature',
+                                      'Barometric pressure': 'Pressure',
+                                      'Relative Humidity ': 'RelHum'})
+
+    # converting to SI units
+    weather.Pressure = weather.Pressure * 100
+    weather.Temperature = (weather.Temperature - 32) * 5/9
+    weather.WindSpeed = weather.WindSpeed / 0.5144
+
+    # drop outlying values; outlier-analysis-1.0.ipynb
+    print(len(weather))
+    clark2002 = (weather.SiteCode == 'Nevada_Clark_2002.0') & (weather.LocalDate.dt.year == 2014) & (weather.LocalDate.dt.month == 11)
+    clark540 = (weather.SiteCode == 'Nevada_Clark_540.0') & (weather.LocalDate.dt.year == 2011) & (weather.LocalDate.dt.month.isin([4, 7, 9]))
+    weather = weather.loc[~clark2002 & ~clark540, :]
+
+    print(len(weather))
+    weather = weather[weather.Pressure >= 72500]
+
+    print(len(weather))
+    weather = weather.loc[weather.WindSpeed <= 92.5, :]
+    print(len(weather))
+
+
     save_path = join(INTERIM_DATA, f'combined-WEATHER.parquet')
     weather.to_parquet(save_path, engine='fastparquet', compression='SNAPPY')
 
@@ -146,6 +173,32 @@ def create_dataset(param_name):
                       df,
                       on=['SiteCode', 'LocalDate'],
                       how='right')
+
+    merged = merged.dropna()
+
+    # finish it with pandas !
+    merged = merged.compute()
+    concat_data = []
+    for name, table in merged.groupby(by='SiteCode'):
+        b = pd.DataFrame([8765] * 8,
+                         index=np.arange(2010, 2018, 1),
+                         columns=['full'])
+        a = table.LocalDate.dt.year.value_counts().sort_index()
+        b = b.join(a)
+        b['test'] = b.LocalDate.isnull().cumsum()
+
+        key = b.test.value_counts().index[0]
+        b['result'] = False
+        b.loc[b.test == key, 'result'] = True
+        b = b.loc[(b.LocalDate.notnull()) & (b.result == True), :]
+
+        table = table[table.LocalDate.dt.year.isin(b.index)]
+        concat_data.append(table)
+
+    try:
+        merged = pd.concat(concat_data)
+    except ValueError:
+        return
 
     save_path = join(PROCESSED_DATA, f'{param_name}.parquet')
     merged.to_parquet(save_path, engine='fastparquet', compression='SNAPPY')
@@ -174,29 +227,30 @@ def main():
     files = no_overlaping_files(files, dir_target=INTERIM_DATA)
     logging.info(files)
 
-    for file in files:
-        logging.info(f'Loading {os.path.basename(file)}')
-
-        # something is messed up with Qualifier column
-        data = dd.read_csv(file,
-                           dtype={'Qualifier': 'object',
-                                        'MDL': 'float64',
-                                        'Date of Last Change': 'object'},
-                           assume_missing=True)
-        logging.info(f'File loaded successfully\n{data.info()}')
-
-        data = create_sitecode(data)
-        data = only_predefined_sites(data)
-        data = create_localdate(data)
-        data = average_instruments(data)
-        data = ensure_coverage(data)
-
-        save_file(data, file)
-
-    concat_data()
-    merge_weather()
+    # for file in files:
+    #     logging.info(f'Loading {os.path.basename(file)}')
+    #
+    #     # something is messed up with Qualifier column
+    #     data = dd.read_csv(file,
+    #                        dtype={'Qualifier': 'object',
+    #                               'MDL': 'float64',
+    #                               'Date of Last Change': 'object'},
+    #                        assume_missing=True)
+    #     logging.info(f'File loaded successfully\n{data.info()}')
+    #
+    #     data = create_sitecode(data)
+    #     data = only_predefined_sites(data)
+    #     data = create_localdate(data)
+    #     data = average_instruments(data)
+    #     data = ensure_coverage(data)
+    #
+    #     save_file(data, file)
+    #
+    # concat_data()
+    # merge_weather()
 
     for param in PARAMS:
+        print(param)
         create_dataset(param)
 
     atexit.register(logging.info, 'Closing...')
