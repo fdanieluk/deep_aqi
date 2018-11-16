@@ -3,3 +3,4 @@ deep_aqi.egg-info
 deep_aqi/src/logs
 **/__pycache__
 deep_aqi/jupyter/.ipynb_checkpoints
+deep_aqi/jupyter/*.pkl
