@@ -30,6 +30,7 @@ jobs:
       - name: ubuntu-latest Renovate
         uses: renovatebot/github-action@v32.52.2
         with:
+          config: renovate-config.js
 #           token: ${{ steps.get_token.outputs.app_token }}
           token: 'x-access-token:${{ steps.get_token.outputs.app_token }}'
 #           token: ${{ secrets.RENOVATE_TOKEN }} 1234
