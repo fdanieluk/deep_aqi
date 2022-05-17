@@ -1,0 +1,39 @@
+name: Renovate
+on:
+  push:
+    branches:
+    - master
+  workflow_dispatch:
+#   schedule:
+    # The "*" (#42, asterisk) character has special semantics in YAML, so this
+    # string has to be quoted.
+#     - cron: '0 13 * * 0'
+
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Get token
+        id: get_token
+        uses: machine-learning-apps/actions-app-token@master
+        with:
+          APP_PEM: ${{ secrets.APP_PEM }}
+          APP_ID: ${{ secrets.APP_ID }}
+#       - name: Test token
+#         run: |
+#           curl -vL "https://api.github.com/repos//cbre-360-portal" \
+#                -H "Authorization: token ${{ steps.get_token.outputs.app_token }}" \
+#                -H "Accept: application/vnd.github.v3+json"
+      - name: ubuntu-latest Renovate
+        uses: renovatebot/github-action@v32.52.2
+        with:
+#           token: ${{ steps.get_token.outputs.app_token }}
+          token: 'x-access-token:${{ steps.get_token.outputs.app_token }}'
+#           token: ${{ secrets.RENOVATE_TOKEN }} 1234
+        env:
+          LOG_LEVEL: 'debug'
+          RENOVATE_DRY_RUN: false
+          RENOVATE_REPOSITORIES: fdanieluk/deep_aqi
