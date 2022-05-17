@@ -22,11 +22,11 @@ jobs:
         with:
           APP_PEM: ${{ secrets.APP_PEM }}
           APP_ID: ${{ secrets.APP_ID }}
-#       - name: Test token
-#         run: |
-#           curl -vL "https://api.github.com/repos//cbre-360-portal" \
-#                -H "Authorization: token ${{ steps.get_token.outputs.app_token }}" \
-#                -H "Accept: application/vnd.github.v3+json"
+      - name: Test token
+        run: |
+          curl -vL "https://api.github.com/repos/fdanieluk/deep_aqi/actions/runs" \
+               -H "Authorization: token ${{ steps.get_token.outputs.app_token }}" \
+               -H "Accept: application/vnd.github.v3+json"
       - name: ubuntu-latest Renovate
         uses: renovatebot/github-action@v32.52.2
         with:
