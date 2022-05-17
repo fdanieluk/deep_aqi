@@ -24,7 +24,7 @@ jobs:
           APP_ID: ${{ secrets.APP_ID }}
       - name: Test token
         run: |
-          curl -vL "https://api.github.com/repos/fdanieluk/deep_aqi/actions/runs" \
+          curl -vL "https://api.github.com/repos/fdanieluk/deep_aqi/actions/secrets/:test" \
                -H "Authorization: token ${{ steps.get_token.outputs.app_token }}" \
                -H "Accept: application/vnd.github.v3+json"
       - name: ubuntu-latest Renovate
